@@ -30,6 +30,11 @@ export const renderHorizontal = ({
   fontSize,
   isRounded = true
 }: Props) => {
+  const itemCount = anime.length || 1;
+  const baseHeight = 90; // header + padding
+  const perItemHeight = 38; // per anime/manga entry
+  const totalHeight = baseHeight + perItemHeight * itemCount;
+
   const animeList = anime.length
     ? `<ul style="list-style:none;padding:0;margin:0;">
         ${anime
@@ -57,11 +62,10 @@ export const renderHorizontal = ({
 
   // Use accent color with opacity for overlay tint
   const overlayColor = `#${color.accent}CC`;
-
   const useBgImage = showBg && lastAnimeCover;
 
   const renderedSVG = `
-  <svg width="640" height="210" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="640" height="${totalHeight}" fill="none" xmlns="http://www.w3.org/2000/svg">
     <foreignObject width="100%" height="100%">
       <div xmlns="http://www.w3.org/1999/xhtml">
         ${poppinsFontSVG}
@@ -70,7 +74,7 @@ export const renderHorizontal = ({
           .container {
             font-family: Poppins, Arial, Helvetica, sans-serif;
             width: 640px;
-            height: 210px;
+            height: ${totalHeight}px;
             border: ${border ? "3px solid #"+color.accent : "1px solid rgba(0, 0, 0, 0.2)"};
             border-radius: ${isRounded ? '16px' : '0'};
             overflow: hidden;

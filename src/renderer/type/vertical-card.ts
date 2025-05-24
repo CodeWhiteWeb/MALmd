@@ -16,7 +16,25 @@ interface Props {
   isRounded?: boolean;
 }
 
-export const renderVertical = ({ username, anime, color, border, userPfp, lastAnimeCover, isManga, showBg = true, hideCovers = false, cardTitle, fontSize, isRounded = true }: Props) => {
+export const renderVertical = ({
+  username,
+  anime,
+  color,
+  border,
+  userPfp,
+  lastAnimeCover,
+  isManga,
+  showBg = true,
+  hideCovers = false,
+  cardTitle,
+  fontSize,
+  isRounded = true
+}: Props) => {
+  const itemCount = anime.length || 1;
+  const baseHeight = 130; // header + padding
+  const perItemHeight = 48; // per anime/manga entry
+  const totalHeight = baseHeight + perItemHeight * itemCount;
+
   const animeList = anime.length
     ? `<ul style="list-style:none;padding:0;margin:0;">
         ${anime
@@ -43,12 +61,11 @@ export const renderVertical = ({ username, anime, color, border, userPfp, lastAn
     : `<div style="color:#${color.secondaryText};">No recent anime found.</div>`;
 
   // Use accent color with opacity for overlay tint
-  const overlayColor = `#${color.accent}CC`; // CC = 80% opacity
-
+  const overlayColor = `#${color.accent}CC`;
   const useBgImage = showBg && lastAnimeCover;
 
   const renderedSVG = `
-  <svg width="340" height="390" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="340" height="${totalHeight}" fill="none" xmlns="http://www.w3.org/2000/svg">
     <foreignObject width="100%" height="100%">
       <div xmlns="http://www.w3.org/1999/xhtml">
         ${poppinsFontSVG}
@@ -56,7 +73,7 @@ export const renderVertical = ({ username, anime, color, border, userPfp, lastAn
           * { margin:0; padding:0; box-sizing:border-box; }
           .container {
             width: 340px;
-            height: 390px;
+            height: ${totalHeight}px;
             font-family: Poppins, Arial, Helvetica, sans-serif;
             padding: 0;
             border: ${border ? "3px solid #"+color.accent : "1px solid rgba(0, 0, 0, 0.2)"};

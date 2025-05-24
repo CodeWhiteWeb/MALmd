@@ -85,27 +85,26 @@ export async function fetchRecentlyWatchedAnime(
       mal_id: e.entry.mal_id
     }));
 
-    let lastAnimeCover, lastAnimeSmallCover;
+    let lastAnimeCover: string | undefined = undefined;
+    let lastAnimeSmallCover: string | undefined = undefined;
     if (anime[0]?.mal_id) {
       for (let i = 0; i < 3; i++) {
         const pics = await fetchPictures('anime', anime[0].mal_id);
         lastAnimeCover = pics.cover;
         lastAnimeSmallCover = pics.small;
         if (lastAnimeCover) break;
-        await new Promise(r => setTimeout(r, 300));
       }
     }
 
-    const animeWithCovers = [];
-    for (const a of anime) {
+    const animeWithCovers = await Promise.all(anime.map(async a => {
       let small_cover = a.mal_id === anime[0]?.mal_id ? lastAnimeSmallCover : undefined;
       if (!small_cover && a.mal_id) {
         const pics = await fetchPictures('anime', a.mal_id);
         small_cover = pics.small;
-        await new Promise(r => setTimeout(r, 200));
       }
-      animeWithCovers.push({ ...a, small_cover });
-    }
+      return { ...a, small_cover };
+    }));
+
     if (!lastAnimeCover)
       lastAnimeCover = animeWithCovers.find(a => a.small_cover)?.small_cover;
     const animeList = animeWithCovers.map(({ mal_id, ...rest }) => rest);
@@ -137,27 +136,26 @@ export async function fetchRecentlyReadManga(
       mal_id: e.entry.mal_id
     }));
 
-    let lastMangaCover, lastMangaSmallCover;
+    let lastMangaCover: string | undefined = undefined;
+    let lastMangaSmallCover: string | undefined = undefined;
     if (manga[0]?.mal_id) {
       for (let i = 0; i < 3; i++) {
         const pics = await fetchPictures('manga', manga[0].mal_id);
         lastMangaCover = pics.cover;
         lastMangaSmallCover = pics.small;
         if (lastMangaCover) break;
-        await new Promise(r => setTimeout(r, 300));
       }
     }
 
-    const mangaWithCovers = [];
-    for (const m of manga) {
+    const mangaWithCovers = await Promise.all(manga.map(async m => {
       let small_cover = m.mal_id === manga[0]?.mal_id ? lastMangaSmallCover : undefined;
       if (!small_cover && m.mal_id) {
         const pics = await fetchPictures('manga', m.mal_id);
         small_cover = pics.small;
-        await new Promise(r => setTimeout(r, 200));
       }
-      mangaWithCovers.push({ ...m, small_cover });
-    }
+      return { ...m, small_cover };
+    }));
+
     if (!lastMangaCover)
       lastMangaCover = mangaWithCovers.find(m => m.small_cover)?.small_cover;
     const mangaList = mangaWithCovers.map(({ mal_id, ...rest }) => rest);
