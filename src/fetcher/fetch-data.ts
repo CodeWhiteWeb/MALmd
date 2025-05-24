@@ -30,12 +30,26 @@ export interface RecentlyReadMangaData {
   lastMangaCover?: string;
 }
 
+// Helper to fetch and convert image to base64 data URI
+async function fetchImageAsDataURI(url?: string): Promise<string | undefined> {
+  if (!url) return undefined;
+  try {
+    const res = await axios.get(url, { responseType: 'arraybuffer' });
+    const contentType = res.headers['content-type'] || 'image/jpeg';
+    const base64 = Buffer.from(res.data, 'binary').toString('base64');
+    return `data:${contentType};base64,${base64}`;
+  } catch {
+    return undefined;
+  }
+}
+
 async function fetchUserPfp(username: string) {
   try {
     const res = await axios.get(
       `https://api.jikan.moe/v4/users/${encodeURIComponent(username)}`
     );
-    return res.data?.data?.images?.jpg?.image_url;
+    const url = res.data?.data?.images?.jpg?.image_url;
+    return await fetchImageAsDataURI(url);
   } catch {
     return undefined;
   }
@@ -50,15 +64,18 @@ async function fetchPictures(
       `https://api.jikan.moe/v4/${type}/${mal_id}/pictures`
     );
     const d = res.data?.data?.[0];
-    return {
-      cover:
-        d?.webp?.image_url || d?.jpg?.large_image_url || d?.jpg?.image_url,
-      small:
-        d?.webp?.small_image_url ||
-        d?.webp?.image_url ||
-        d?.jpg?.small_image_url ||
-        d?.jpg?.image_url
-    };
+    const coverUrl =
+      d?.webp?.image_url || d?.jpg?.large_image_url || d?.jpg?.image_url;
+    const smallUrl =
+      d?.webp?.small_image_url ||
+      d?.webp?.image_url ||
+      d?.jpg?.small_image_url ||
+      d?.jpg?.image_url;
+    const [cover, small] = await Promise.all([
+      fetchImageAsDataURI(coverUrl),
+      fetchImageAsDataURI(smallUrl)
+    ]);
+    return { cover, small };
   } catch {
     return {};
   }

@@ -83,6 +83,10 @@
       <label>Count</label>
       <input type="number" id="count" min="1" max="10" value="5">
 
+      <button id="generate" style="width:100%;margin-top:28px;padding:14px 0;font-size:18px;font-weight:bold;background:#4c71f2;color:#fff;border:none;border-radius:8px;cursor:pointer;letter-spacing:1px;">
+        GENERATE
+      </button>
+
       <div class="url-box" id="url-box"></div>
     </div>
   </div>
@@ -122,13 +126,15 @@
       $("url-box").textContent = url ? (location.origin + url) : "Enter your username above";
       $("card-preview").src = url ? url : "";
     }
-    params.forEach(id => {
-      const el = $(id);
-      if (el) el.addEventListener("input", update);
-    });
-    // Also listen for checkbox changes
-    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.addEventListener("change", update));
-    // Initial update
+    // Remove all instant update listeners
+    // params.forEach(id => {
+    //   const el = $(id);
+    //   if (el) el.addEventListener("input", update);
+    // });
+    // document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.addEventListener("change", update));
+    // Only update on GENERATE button click
+    $("generate").addEventListener("click", update);
+    // Initial state
     update();
   </script>
 </body>

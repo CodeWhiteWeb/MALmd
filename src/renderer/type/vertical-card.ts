@@ -124,8 +124,19 @@ export const renderVertical = ({
           }
           ul { margin-top: 0; }
           li { margin-bottom: 10px; }
+          .watermark {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            opacity: 0.7;
+            z-index: 10;
+            pointer-events: none;
+          }
         </style>
         <div class="container">
+          <img class="watermark" src="assets/logo.png" alt="MALmd logo"/>
           ${useBgImage ? `<div class="overlay"></div>` : ''}
           <div class="header">
             ${userPfp ? `<img class="pfp" src="${userPfp}" alt="pfp"/>` : ''}
