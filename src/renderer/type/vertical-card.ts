@@ -66,7 +66,12 @@ export const renderVertical = ({
 
   const renderedSVG = `
   <svg width="340" height="${totalHeight}" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <foreignObject width="100%" height="100%">
+    <defs>
+      <clipPath id="rounded-corners">
+        <rect width="340" height="${totalHeight}" rx="${isRounded ? 16 : 0}" ry="${isRounded ? 16 : 0}" />
+      </clipPath>
+    </defs>
+    <foreignObject width="100%" height="100%" ${isRounded ? 'clip-path="url(#rounded-corners)"' : ''}>
       <div xmlns="http://www.w3.org/1999/xhtml">
         ${poppinsFontSVG}
         <style>
