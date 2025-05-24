@@ -28,10 +28,49 @@ export const renderSVG = (
 
   switch (type) {
     case 'vertical':
-      return renderVertical({ username, anime, color, border, userPfp, lastAnimeCover, isManga, showBg, hideCovers, cardTitle, fontSize, isRounded });
+      return renderVertical({
+        username,
+        anime,
+        color,
+        border,
+        userPfp,
+        lastAnimeCover,
+        isManga,
+        showBg,
+        hideCovers,
+        cardTitle,
+        fontSize,
+        isRounded
+      });
     case 'horizontal':
-      return renderHorizontal({ username, anime, color, border, userPfp, lastAnimeCover, isManga, showBg, hideCovers, cardTitle, fontSize, isRounded });
+      return renderHorizontal({
+        username,
+        anime,
+        color,
+        border,
+        userPfp,
+        lastAnimeCover,
+        isManga,
+        showBg,
+        hideCovers,
+        cardTitle,
+        fontSize,
+        isRounded
+      });
     default:
-      return renderVertical({ username, anime, color, border, userPfp, lastAnimeCover, isManga, showBg, hideCovers, cardTitle, fontSize, isRounded });
+      return renderVertical({
+        username,
+        anime,
+        color,
+        border,
+        userPfp,
+        lastAnimeCover,
+        isManga,
+        showBg,
+        hideCovers,
+        cardTitle,
+        fontSize,
+        isRounded
+      });
   }
 };

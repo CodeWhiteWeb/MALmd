@@ -28,7 +28,7 @@ export const renderVertical = ({
   hideCovers = false,
   cardTitle,
   fontSize,
-  isRounded = true
+  isRounded = true,
 }: Props) => {
   const itemCount = anime.length || 1;
   const baseHeight = 130; // header + padding
@@ -43,14 +43,14 @@ export const renderVertical = ({
             if (!hideCovers) {
               if (idx === 0 && lastAnimeCover) {
                 coverImg = `<img src="${lastAnimeCover}" alt="cover" style="width:22px;height:22px;border-radius:4px;object-fit:cover;box-shadow:0 1px 4px #0002;flex-shrink:0;" />`;
-              } else if ((idx === 1 || idx === 2) && a.small_cover) {
+              } else if (a.small_cover) {
                 coverImg = `<img src="${a.small_cover}" alt="cover" style="width:22px;height:22px;border-radius:4px;object-fit:cover;box-shadow:0 1px 4px #0002;flex-shrink:0;" />`;
               }
             }
             return `<li style="margin-bottom:8px;display:flex;align-items:center;gap:10px;">
                 ${coverImg}
                 <div style="flex:1;">
-                  <a href="${a.url}" target="_blank" style="color:#${color.primaryText};text-decoration:none;font-weight:bold;font-size:${fontSize || 16}px;vertical-align:middle;">${a.title}</a>
+                  <a href="${a.url}" target="_blank" style="color:#${color.primaryText};text-decoration:none;font-weight:bold;font-size:${fontSize || 14}px;vertical-align:middle;">${a.title}</a>
                   <span style="color:#${color.secondaryText};font-size:13px;"> (Ep. ${a.episode})</span>
                   <div style="color:#${color.accent};font-size:11px;">${new Date(a.watched_at).toLocaleString()}</div>
                 </div>
@@ -60,8 +60,8 @@ export const renderVertical = ({
       </ul>`
     : `<div style="color:#${color.secondaryText};">No recent anime found.</div>`;
 
-  // Use accent color with opacity for overlay tint
-  const overlayColor = `#${color.accent}CC`;
+  // Use background color for overlay tint
+  const overlayColor = `#${color.background}E6`;
   const useBgImage = showBg && lastAnimeCover;
 
   const renderedSVG = `
@@ -124,19 +124,8 @@ export const renderVertical = ({
           }
           ul { margin-top: 0; }
           li { margin-bottom: 10px; }
-          .watermark {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 32px;
-            height: 32px;
-            opacity: 0.7;
-            z-index: 10;
-            pointer-events: none;
-          }
         </style>
         <div class="container">
-          <img class="watermark" src="assets/logo.png" alt="MALmd logo"/>
           ${useBgImage ? `<div class="overlay"></div>` : ''}
           <div class="header">
             ${userPfp ? `<img class="pfp" src="${userPfp}" alt="pfp"/>` : ''}

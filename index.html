@@ -114,7 +114,7 @@
       if ($("hide_covers").checked) q.push("hide_covers=true");
       if (!$("rounded").checked) q.push("rounded=false");
       const count = $("count").value;
-      if (count && count !== "5") q.push("count=" + count);
+      if (count) q.push("count=" + count);
       const cardTitle = $("cardTitle").value.trim();
       if (cardTitle) q.push("title=" + encodeURIComponent(cardTitle));
       const fontSize = $("fontSize").value;

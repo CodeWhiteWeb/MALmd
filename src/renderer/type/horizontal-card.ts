@@ -28,7 +28,7 @@ export const renderHorizontal = ({
   hideCovers = false,
   cardTitle,
   fontSize,
-  isRounded = true
+  isRounded = true,
 }: Props) => {
   const itemCount = anime.length || 1;
   const baseHeight = 90; // header + padding
@@ -43,7 +43,7 @@ export const renderHorizontal = ({
             if (!hideCovers) {
               if (idx === 0 && lastAnimeCover) {
                 coverImg = `<img src="${lastAnimeCover}" alt="cover" style="width:22px;height:22px;border-radius:4px;object-fit:cover;box-shadow:0 1px 4px #0002;flex-shrink:0;" />`;
-              } else if ((idx === 1 || idx === 2) && a.small_cover) {
+              } else if (a.small_cover) {
                 coverImg = `<img src="${a.small_cover}" alt="cover" style="width:22px;height:22px;border-radius:4px;object-fit:cover;box-shadow:0 1px 4px #0002;flex-shrink:0;" />`;
               }
             }
@@ -60,8 +60,8 @@ export const renderHorizontal = ({
       </ul>`
     : `<div style="color:#${color.secondaryText};">No recent anime found.</div>`;
 
-  // Use accent color with opacity for overlay tint
-  const overlayColor = `#${color.accent}CC`;
+  // Use background color for overlay tint
+  const overlayColor = `#${color.background}E6`;
   const useBgImage = showBg && lastAnimeCover;
 
   const renderedSVG = `
@@ -123,19 +123,8 @@ export const renderHorizontal = ({
           }
           ul { margin-top: 0; }
           li { margin-bottom: 10px; }
-          .watermark {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 32px;
-            height: 32px;
-            opacity: 0.7;
-            z-index: 10;
-            pointer-events: none;
-          }
         </style>
         <div class="container">
-          <img class="watermark" src="assets/logo.png" alt="MALmd logo"/>
           ${useBgImage ? `<div class="overlay"></div>` : ''}
           <div class="header">
             ${userPfp ? `<img class="pfp" src="${userPfp}" alt="pfp"/>` : ''}
