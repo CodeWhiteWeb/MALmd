@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MALmd Card Generator</title>
+  <meta name="viewport" content="width=600, initial-scale=1">
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f6f8fa; }
+    .container { display: flex; max-width: 900px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 16px #0001; }
+    .preview { flex: 1; display: flex; align-items: center; justify-content: center; border-right: 1px solid #eee; min-height: 480px; background: #f9f9f9; }
+    .controls { flex: 1; padding: 32px 24px; }
+    .controls label { display: block; margin: 18px 0 6px; font-weight: 500; }
+    .controls input[type="text"], .controls select, .controls input[type="number"] {
+      width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 15px;
+    }
+    .scopes { display: flex; flex-wrap: wrap; gap: 18px 24px; margin-bottom: 18px; }
+    .scopes label { font-weight: 400; margin: 0; }
+    .url-box { margin-top: 24px; background: #f3f3f3; padding: 10px 12px; border-radius: 6px; font-size: 13px; word-break: break-all; }
+    .footer { text-align: center; margin: 32px 0 0 0; color: #888; font-size: 13px; }
+    @media (max-width: 900px) {
+      .container { flex-direction: column; }
+      .preview { border-right: none; border-bottom: 1px solid #eee; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="preview">
+      <img id="card-preview" src="" alt="Preview" style="max-width:100%; max-height:420px; border-radius:10px; background:#fff; border:1px solid #eee;">
+    </div>
+    <div class="controls">
+      <label>MyAnimeList Username</label>
+      <input type="text" id="username" placeholder="e.g. CodeWhiteWeb" value="CodeWhiteWeb">
+
+      <label>Type</label>
+      <select id="type">
+        <option value="vertical">Vertical</option>
+        <option value="horizontal">Horizontal</option>
+      </select>
+
+      <label>Theme</label>
+      <select id="theme">
+        <option value="default">Default</option>
+        <option value="dark">Dark</option>
+        <option value="chartreuse_dark">Chartreuse Dark</option>
+        <option value="radical">Radical</option>
+        <option value="merko">Merko</option>
+        <option value="gruvbox">Gruvbox</option>
+        <option value="tokyonight">Tokyonight</option>
+        <option value="catppuccin">Catppuccin</option>
+        <option value="catppuccin_latte">Catppuccin Latte</option>
+        <option value="catppuccin_frappe">Catppuccin Frappe</option>
+        <option value="catppuccin_macchiato">Catppuccin Macchiato</option>
+        <option value="catppuccin_mocha">Catppuccin Mocha</option>
+        <option value="algolia">Algolia</option>
+        <option value="monokai">Monokai</option>
+        <option value="dracula">Dracula</option>
+        <option value="nord">Nord</option>
+        <option value="github">Github</option>
+        <option value="graywhite">Graywhite</option>
+        <option value="moonlight">Moonlight</option>
+        <option value="hackerman">Hackerman</option>
+        <option value="shadow_red">Shadow Red</option>
+        <option value="shadow_green">Shadow Green</option>
+        <option value="shadow_blue">Shadow Blue</option>
+      </select>
+
+      <label>Custom Title</label>
+      <input type="text" id="cardTitle" placeholder="Leave blank for default">
+
+      <label>Font Size (px)</label>
+      <input type="number" id="fontSize" min="12" max="40" placeholder="Default">
+
+      <div class="scopes">
+        <label><input type="checkbox" id="border"> Border</label>
+        <label><input type="checkbox" id="manga"> Manga Mode</label>
+        <label><input type="checkbox" id="bg" checked> Show Background</label>
+        <label><input type="checkbox" id="hide_pfp"> Hide Profile Pic</label>
+        <label><input type="checkbox" id="hide_covers"> Hide Covers</label>
+        <label><input type="checkbox" id="rounded" checked> Rounded Corners</label>
+      </div>
+
+      <label>Count</label>
+      <input type="number" id="count" min="1" max="10" value="5">
+
+      <div class="url-box" id="url-box"></div>
+    </div>
+  </div>
+  <div class="footer">
+    <a href="https://github.com/CodeWhiteWeb/MALmd" target="_blank">GitHub</a> &middot; Made with ❤
+  </div>
+  <script>
+    const $ = id => document.getElementById(id);
+    const params = [
+      "username", "type", "theme", "border", "manga", "bg", "hide_pfp", "hide_covers", "rounded", "count", "cardTitle", "fontSize"
+    ];
+    function buildUrl() {
+      const q = [];
+      const username = $("username").value.trim();
+      if (!username) return "";
+      q.push("username=" + encodeURIComponent(username));
+      const type = $("type").value;
+      if (type !== "vertical") q.push("type=" + type);
+      const theme = $("theme").value;
+      if (theme !== "default") q.push("theme=" + theme);
+      if ($("border").checked) q.push("border=true");
+      if ($("manga").checked) q.push("manga=true");
+      if (!$("bg").checked) q.push("bg=false");
+      if ($("hide_pfp").checked) q.push("hide_pfp=true");
+      if ($("hide_covers").checked) q.push("hide_covers=true");
+      if (!$("rounded").checked) q.push("rounded=false");
+      const count = $("count").value;
+      if (count && count !== "5") q.push("count=" + count);
+      const cardTitle = $("cardTitle").value.trim();
+      if (cardTitle) q.push("title=" + encodeURIComponent(cardTitle));
+      const fontSize = $("fontSize").value;
+      if (fontSize) q.push("font_size=" + fontSize);
+      return "/api?" + q.join("&");
+    }
+    function update() {
+      const url = buildUrl();
+      $("url-box").textContent = url ? (location.origin + url) : "Enter your username above";
+      $("card-preview").src = url ? url : "";
+    }
+    params.forEach(id => {
+      const el = $(id);
+      if (el) el.addEventListener("input", update);
+    });
+    // Also listen for checkbox changes
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.addEventListener("change", update));
+    // Initial update
+    update();
+  </script>
+</body>
+</html>
