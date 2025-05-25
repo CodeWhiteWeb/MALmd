@@ -31,25 +31,61 @@ export interface RecentlyReadMangaData {
 }
 
 // Helper to fetch and convert image to base64 data URI
-async function fetchImageAsDataURI(url?: string): Promise<string | undefined> {
+async function fetchImageAsDataURI(url?: string, base64?: boolean): Promise<string | undefined> {
   if (!url) return undefined;
+  // Only convert to base64 if base64 is true (not undefined or false)
+  if (base64 !== true) return url;
   try {
     const res = await axios.get(url, { responseType: 'arraybuffer' });
     const contentType = res.headers['content-type'] || 'image/jpeg';
-    const base64 = Buffer.from(res.data, 'binary').toString('base64');
-    return `data:${contentType};base64,${base64}`;
+    const base64str = Buffer.from(res.data, 'binary').toString('base64');
+    return `data:${contentType};base64,${base64str}`;
   } catch {
     return undefined;
   }
 }
 
-async function fetchUserPfp(username: string) {
+async function fetchUserPfp(username: string, base64?: boolean) {
   try {
     const res = await axios.get(
       `https://api.jikan.moe/v4/users/${encodeURIComponent(username)}`
     );
     const url = res.data?.data?.images?.jpg?.image_url;
-    return await fetchImageAsDataURI(url);
+    // Only convert to base64 if base64 is true
+    return base64 === true ? await fetchImageAsDataURI(url, true) : url;
+  } catch {
+    return undefined;
+  }
+}
+
+// Try to fetch cover image from AniList by title
+async function fetchAniListImage(title: string, isManga: boolean = false): Promise<string | undefined> {
+  const query = `
+    query ($search: String, $type: MediaType) {
+      Media(search: $search, type: $type) {
+        coverImage {
+          extraLarge
+          large
+          medium
+        }
+      }
+    }
+  `;
+  try {
+    const res = await axios.post('https://graphql.anilist.co', {
+      query,
+      variables: {
+        search: title,
+        type: isManga ? 'MANGA' : 'ANIME'
+      }
+    }, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return (
+      res.data?.data?.Media?.coverImage?.extraLarge ||
+      res.data?.data?.Media?.coverImage?.large ||
+      res.data?.data?.Media?.coverImage?.medium
+    );
   } catch {
     return undefined;
   }
@@ -57,8 +93,25 @@ async function fetchUserPfp(username: string) {
 
 async function fetchPictures(
   type: 'anime' | 'manga',
-  mal_id: number
+  mal_id: number,
+  title?: string,
+  base64?: boolean
 ): Promise<{ cover?: string; small?: string }> {
+  // Try AniList first
+  let anilistImg: string | undefined = undefined;
+  if (title) {
+    anilistImg = await fetchAniListImage(title, type === 'manga');
+    if (anilistImg) {
+      // Only convert to base64 if base64 is true
+      if (base64 === true) {
+        const imgData = await fetchImageAsDataURI(anilistImg, true);
+        return { cover: imgData, small: imgData };
+      } else {
+        return { cover: anilistImg, small: anilistImg };
+      }
+    }
+  }
+  // Fallback to Jikan/MAL
   try {
     const res = await axios.get(
       `https://api.jikan.moe/v4/${type}/${mal_id}/pictures`
@@ -71,11 +124,15 @@ async function fetchPictures(
       d?.webp?.image_url ||
       d?.jpg?.small_image_url ||
       d?.jpg?.image_url;
-    const [cover, small] = await Promise.all([
-      fetchImageAsDataURI(coverUrl),
-      fetchImageAsDataURI(smallUrl)
-    ]);
-    return { cover, small };
+    if (base64 === true) {
+      const [cover, small] = await Promise.all([
+        fetchImageAsDataURI(coverUrl, true),
+        fetchImageAsDataURI(smallUrl, true)
+      ]);
+      return { cover, small };
+    } else {
+      return { cover: coverUrl, small: smallUrl };
+    }
   } catch {
     return {};
   }
@@ -83,14 +140,15 @@ async function fetchPictures(
 
 export async function fetchRecentlyWatchedAnime(
   username: string,
-  count = 5
+  count = 5,
+  base64?: boolean
 ): Promise<RecentlyWatchedData> {
   try {
     const res = await axios.get(
       `https://api.jikan.moe/v4/users/${encodeURIComponent(username)}/history/anime`
     );
     const data = res.data?.data;
-    const userPfp = await fetchUserPfp(username);
+    const userPfp = await fetchUserPfp(username, base64);
     if (!Array.isArray(data) || !data.length)
       return { username, anime: [], userPfp };
 
@@ -103,28 +161,15 @@ export async function fetchRecentlyWatchedAnime(
     }));
 
     let lastAnimeCover: string | undefined = undefined;
-    let lastAnimeSmallCover: string | undefined = undefined;
     if (anime[0]?.mal_id) {
       for (let i = 0; i < 3; i++) {
-        const pics = await fetchPictures('anime', anime[0].mal_id);
+        const pics = await fetchPictures('anime', anime[0].mal_id, anime[0].title, base64);
         lastAnimeCover = pics.cover;
-        lastAnimeSmallCover = pics.small;
         if (lastAnimeCover) break;
       }
     }
 
-    const animeWithCovers = await Promise.all(anime.map(async a => {
-      let small_cover = a.mal_id === anime[0]?.mal_id ? lastAnimeSmallCover : undefined;
-      if (!small_cover && a.mal_id) {
-        const pics = await fetchPictures('anime', a.mal_id);
-        small_cover = pics.small;
-      }
-      return { ...a, small_cover };
-    }));
-
-    if (!lastAnimeCover)
-      lastAnimeCover = animeWithCovers.find(a => a.small_cover)?.small_cover;
-    const animeList = animeWithCovers.map(({ mal_id, ...rest }) => rest);
+    const animeList = anime.map(({ mal_id, ...rest }) => rest);
     return { username, anime: animeList, userPfp, lastAnimeCover };
   } catch (e) {
     console.error('fetchRecentlyWatchedAnime error:', e);
@@ -134,14 +179,15 @@ export async function fetchRecentlyWatchedAnime(
 
 export async function fetchRecentlyReadManga(
   username: string,
-  count = 5
+  count = 5,
+  base64?: boolean
 ): Promise<RecentlyReadMangaData> {
   try {
     const res = await axios.get(
       `https://api.jikan.moe/v4/users/${encodeURIComponent(username)}/history/manga`
     );
     const data = res.data?.data;
-    const userPfp = await fetchUserPfp(username);
+    const userPfp = await fetchUserPfp(username, base64);
     if (!Array.isArray(data) || !data.length)
       return { username, manga: [], userPfp };
 
@@ -154,28 +200,15 @@ export async function fetchRecentlyReadManga(
     }));
 
     let lastMangaCover: string | undefined = undefined;
-    let lastMangaSmallCover: string | undefined = undefined;
     if (manga[0]?.mal_id) {
       for (let i = 0; i < 3; i++) {
-        const pics = await fetchPictures('manga', manga[0].mal_id);
+        const pics = await fetchPictures('manga', manga[0].mal_id, manga[0].title, base64);
         lastMangaCover = pics.cover;
-        lastMangaSmallCover = pics.small;
         if (lastMangaCover) break;
       }
     }
 
-    const mangaWithCovers = await Promise.all(manga.map(async m => {
-      let small_cover = m.mal_id === manga[0]?.mal_id ? lastMangaSmallCover : undefined;
-      if (!small_cover && m.mal_id) {
-        const pics = await fetchPictures('manga', m.mal_id);
-        small_cover = pics.small;
-      }
-      return { ...m, small_cover };
-    }));
-
-    if (!lastMangaCover)
-      lastMangaCover = mangaWithCovers.find(m => m.small_cover)?.small_cover;
-    const mangaList = mangaWithCovers.map(({ mal_id, ...rest }) => rest);
+    const mangaList = manga.map(({ mal_id, ...rest }) => rest);
     return { username, manga: mangaList, userPfp, lastMangaCover };
   } catch (e) {
     console.error('fetchRecentlyReadManga error:', e);

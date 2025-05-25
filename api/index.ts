@@ -14,7 +14,7 @@ interface ResponseQuery {
 }
 
 const handler = async (req: VercelRequest, res: VercelResponse) => {
-  const { type, theme, username, border, manga, bg, count, hide_pfp, hide_covers, title, font_size, rounded } = req.query as any;
+  const { type, theme, username, border, manga, bg, count, hide_pfp, covers, title, font_size, rounded } = req.query as any;
 
   if (!username) {
     res.status(400).send('Missing username query parameter');
@@ -38,7 +38,6 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
 
   // Parse booleans
   const hidePfp = hide_pfp === 'true' || hide_pfp === true;
-  const hideCovers = hide_covers === 'true' || hide_covers === true;
   const cardTitle = typeof title === 'string' ? title : undefined;
   const fontSize = typeof font_size === 'string' && !isNaN(Number(font_size)) ? Number(font_size) : undefined;
   const isRounded = rounded === undefined ? true : (rounded === 'true' || rounded === true);
@@ -64,7 +63,6 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
             lastAnimeCover: showBg ? data.lastMangaCover : undefined,
             isManga: true,
             showBg,
-            hideCovers,
             cardTitle,
             fontSize,
             isRounded
@@ -90,7 +88,6 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
           lastAnimeCover: showBg ? data.lastAnimeCover : undefined,
           isManga: false,
           showBg,
-          hideCovers,
           cardTitle,
           fontSize,
           isRounded

@@ -76,8 +76,8 @@
         <label><input type="checkbox" id="manga"> Manga Mode</label>
         <label><input type="checkbox" id="bg" checked> Show Background</label>
         <label><input type="checkbox" id="hide_pfp"> Hide Profile Pic</label>
-        <label><input type="checkbox" id="hide_covers"> Hide Covers</label>
         <label><input type="checkbox" id="rounded" checked> Rounded Corners</label>
+        <label><input type="checkbox" id="base64" checked> Convert Images to Base64</label>
       </div>
 
       <label>Count</label>
@@ -96,7 +96,7 @@
   <script>
     const $ = id => document.getElementById(id);
     const params = [
-      "username", "type", "theme", "border", "manga", "bg", "hide_pfp", "hide_covers", "rounded", "count", "cardTitle", "fontSize"
+      "username", "type", "theme", "border", "manga", "bg", "hide_pfp", "rounded", "count", "cardTitle", "fontSize"
     ];
     function buildUrl() {
       const q = [];
@@ -111,8 +111,9 @@
       if ($("manga").checked) q.push("manga=true");
       if (!$("bg").checked) q.push("bg=false");
       if ($("hide_pfp").checked) q.push("hide_pfp=true");
-      if ($("hide_covers").checked) q.push("hide_covers=true");
       if (!$("rounded").checked) q.push("rounded=false");
+      // Add base64 param
+      if (!$("base64").checked) q.push("base64=false");
       const count = $("count").value;
       if (count) q.push("count=" + count);
       const cardTitle = $("cardTitle").value.trim();

@@ -11,7 +11,6 @@ export interface RenderSVGData {
   lastAnimeCover?: string;
   isManga?: boolean; // add this flag
   showBg?: boolean; // new flag
-  hideCovers?: boolean;
   cardTitle?: string;
   fontSize?: number;
   isRounded?: boolean;
@@ -23,7 +22,7 @@ export const renderSVG = (
   theme: keyof typeof themes,
   border: boolean
 ) => {
-  const { username, anime, userPfp, lastAnimeCover, isManga, showBg, hideCovers, cardTitle, fontSize, isRounded } = data;
+  const { username, anime, userPfp, lastAnimeCover, isManga, showBg, cardTitle, fontSize, isRounded } = data;
   const color = renderTheme(theme);
 
   switch (type) {
@@ -37,7 +36,6 @@ export const renderSVG = (
         lastAnimeCover,
         isManga,
         showBg,
-        hideCovers,
         cardTitle,
         fontSize,
         isRounded
@@ -52,7 +50,6 @@ export const renderSVG = (
         lastAnimeCover,
         isManga,
         showBg,
-        hideCovers,
         cardTitle,
         fontSize,
         isRounded
@@ -67,7 +64,6 @@ export const renderSVG = (
         lastAnimeCover,
         isManga,
         showBg,
-        hideCovers,
         cardTitle,
         fontSize,
         isRounded

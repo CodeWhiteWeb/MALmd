@@ -10,7 +10,6 @@ interface Props {
   lastAnimeCover?: string;
   isManga?: boolean;
   showBg?: boolean; // new flag
-  hideCovers?: boolean;
   cardTitle?: string;
   fontSize?: number;
   isRounded?: boolean;
@@ -25,7 +24,6 @@ export const renderVertical = ({
   lastAnimeCover,
   isManga,
   showBg = true,
-  hideCovers = false,
   cardTitle,
   fontSize,
   isRounded = true,
@@ -39,16 +37,7 @@ export const renderVertical = ({
     ? `<ul style="list-style:none;padding:0;margin:0;">
         ${anime
           .map((a, idx) => {
-            let coverImg = '';
-            if (!hideCovers) {
-              if (idx === 0 && lastAnimeCover) {
-                coverImg = `<img src="${lastAnimeCover}" alt="cover" style="width:22px;height:22px;border-radius:4px;object-fit:cover;box-shadow:0 1px 4px #0002;flex-shrink:0;" />`;
-              } else if (a.small_cover) {
-                coverImg = `<img src="${a.small_cover}" alt="cover" style="width:22px;height:22px;border-radius:4px;object-fit:cover;box-shadow:0 1px 4px #0002;flex-shrink:0;" />`;
-              }
-            }
             return `<li style="margin-bottom:8px;display:flex;align-items:center;gap:10px;">
-                ${coverImg}
                 <div style="flex:1;">
                   <a href="${a.url}" target="_blank" style="color:#${color.primaryText};text-decoration:none;font-weight:bold;font-size:${fontSize || 14}px;vertical-align:middle;">${a.title}</a>
                   <span style="color:#${color.secondaryText};font-size:13px;"> (Ep. ${a.episode})</span>

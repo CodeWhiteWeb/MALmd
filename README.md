@@ -1,18 +1,18 @@
 <p align="center">
   <img align="center" width="100" src="assets/logo.png" />
 
-  <h1 align="center">MALmd: MyAnimeList Recently Watched/Read Cards</h1>
+  <h1 align="center">MAL-md: MyAnimeList Recently Watched/Read Cards</h1>
   <h3 align="center">Show your 5 most recently watched anime or read manga from MyAnimeList in your GitHub README.</h3>
 </p>
 
 <!-- Badges -->
 <p align="center">
-  <a href="https://github.com/CodeWhiteWeb/MALmd/issues">
-    <img src="https://img.shields.io/github/issues/CodeWhiteWeb/MALmd?style=flat-square">
+  <a href="https://github.com/CodeWhiteWeb/MAL-md/issues">
+    <img src="https://img.shields.io/github/issues/CodeWhiteWeb/MAL-md?style=flat-square">
   </a>
 
-  <a href="https://github.com/CodeWhiteWeb/MALmd/pulls">
-    <img src="https://img.shields.io/github/issues-pr/CodeWhiteWeb/MALmd?style=flat-square">
+  <a href="https://github.com/CodeWhiteWeb/MAL-md/pulls">
+    <img src="https://img.shields.io/github/issues-pr/CodeWhiteWeb/MAL-md?style=flat-square">
   </a>
   
   <a href="https://twitter.com/CodeWhiteWeb1" target="_blank">
@@ -22,9 +22,9 @@
 
 <!-- Links -->
 <p align="center">
-  <a href="https://malmd.vercel.app/api" target="_blank">View Demo</a>
+  <a href="https://mal-md.vercel.app/api" target="_blank">View Demo</a>
   <span> · </span>
-  <a href="https://github.com/CodeWhiteWeb/MALmd/issues" target="_blank">Report Bug</a>
+  <a href="https://github.com/CodeWhiteWeb/MAL-md/issues" target="_blank">Report Bug</a>
 </p>
 
 ## Features ✨
@@ -40,7 +40,7 @@
 Copy the markdown below and paste it in your Github Readme, replacing `USERNAME` with your MyAnimeList username.
 
 ```md
-[![MAL Recently Watched](https://malmd.vercel.app/api?username=USERNAME&type=horizontal&theme=dark)](https://myanimelist.net/profile/USERNAME)
+[![MAL Recently Watched](https://mal-md.vercel.app/api?username=USERNAME&type=horizontal&theme=dark)](https://myanimelist.net/profile/USERNAME)
 ```
 
 ## API Scopes (Query Parameters)
@@ -55,7 +55,6 @@ Copy the markdown below and paste it in your Github Readme, replacing `USERNAME`
 | bg          | boolean | true      | Show background cover image: `true` (show) or `false` (hide, use theme color background)    |
 | count       | number  | 5         | Number of entries to show (1-10)                                                             |
 | hide_pfp    | boolean | false     | Hide the user profile picture: `true` or `false`                                            |
-| hide_covers | boolean | false     | Hide the small cover images for each entry: `true` or `false`                               |
 | title       | string  | (auto)    | Custom card title (overrides default)                                                        |
 | font_size   | number  | (auto)    | Font size for card title and entries (in px)                                                 |
 | rounded     | boolean | true      | Rounded card corners: `true` (rounded) or `false` (square)                                  |
@@ -64,32 +63,32 @@ Copy the markdown below and paste it in your Github Readme, replacing `USERNAME`
 
 **Recently Watched Anime (default):**
 ```
-https://malmd.vercel.app/api?username=USERNAME
+https://mal-md.vercel.app/api?username=USERNAME
 ```
 
 **Recently Read Manga:**
 ```
-https://malmd.vercel.app/api?username=USERNAME&manga=true
+https://mal-md.vercel.app/api?username=USERNAME&manga=true
 ```
 
 **Horizontal Card with Dark Theme:**
 ```
-https://malmd.vercel.app/api?username=USERNAME&type=horizontal&theme=dark
+https://mal-md.vercel.app/api?username=USERNAME&type=horizontal&theme=dark
 ```
 
 **Hide Background Image:**
 ```
-https://malmd.vercel.app/api?username=USERNAME&bg=false
+https://mal-md.vercel.app/api?username=USERNAME&bg=false
 ```
 
-**Show 3 entries, no covers, custom title, square corners:**
+**Show 3 entries, custom title, square corners:**
 ```
-https://malmd.vercel.app/api?username=USERNAME&count=3&hide_covers=true&title=My%20Anime%20History&rounded=false
+https://mal-md.vercel.app/api?username=USERNAME&count=3&title=My%20Anime%20History&rounded=false
 ```
 
 **All Scopes Example:**
 ```
-https://malmd.vercel.app/api?username=USERNAME&type=horizontal&theme=catppuccin_mocha&border=true&manga=true&bg=false
+https://mal-md.vercel.app/api?username=USERNAME&type=horizontal&theme=catppuccin_mocha&border=true&manga=true&bg=false
 ```
 
 ## Themes
@@ -136,7 +135,7 @@ npx vercel dev
 
 Contributions, issues and feature requests are welcome!
 
-Feel free to check [issues page](https://github.com/CodeWhiteWeb/MALmd/issues).
+Feel free to check [issues page](https://github.com/CodeWhiteWeb/MAL-md/issues).
 
 ## Special Thanks ❤
 
