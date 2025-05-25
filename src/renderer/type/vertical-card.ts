@@ -52,6 +52,10 @@ export const renderVertical = ({
   // Use background color for overlay tint
   const overlayColor = `#${color.background}E6`;
   const useBgImage = showBg && lastAnimeCover;
+  const isBase64 = lastAnimeCover?.startsWith('data:');
+  const bgImageSVG = useBgImage && !isBase64
+    ? `<image href="${lastAnimeCover}" x="0" y="0" width="340" height="${totalHeight}" preserveAspectRatio="xMidYMid slice" crossOrigin="anonymous" />`
+    : '';
 
   const renderedSVG = `
   <svg width="340" height="${totalHeight}" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,6 +64,7 @@ export const renderVertical = ({
         <rect width="340" height="${totalHeight}" rx="${isRounded ? 16 : 0}" ry="${isRounded ? 16 : 0}" />
       </clipPath>
     </defs>
+    ${bgImageSVG}
     <foreignObject width="100%" height="100%" ${isRounded ? 'clip-path="url(#rounded-corners)"' : ''}>
       <div xmlns="http://www.w3.org/1999/xhtml">
         ${poppinsFontSVG}
@@ -120,7 +125,7 @@ export const renderVertical = ({
           li { margin-bottom: 10px; }
         </style>
         <div class="container">
-          ${useBgImage ? `<div class="overlay"></div>` : ''}
+          ${useBgImage && isBase64 ? `<div class="overlay"></div>` : ''}
           <div class="header">
             ${userPfp ? `<img class="pfp" src="${userPfp}" alt="pfp"/>` : ''}
             <div class="username">${cardTitle ? cardTitle : `${username}'s<br/>Recently ${isManga === true ? 'Read' : 'Watched'}`}</div>
