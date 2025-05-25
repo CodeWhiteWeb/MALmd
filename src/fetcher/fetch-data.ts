@@ -33,8 +33,8 @@ export interface RecentlyReadMangaData {
 // Helper to fetch and convert image to base64 data URI
 async function fetchImageAsDataURI(url?: string, base64?: boolean): Promise<string | undefined> {
   if (!url) return undefined;
-  // Only convert to base64 if base64 is true (not undefined or false)
-  if (base64 !== true) return url;
+  // Only convert to base64 if base64 is true (default: true)
+  if (base64 === false) return url;
   try {
     const res = await axios.get(url, { responseType: 'arraybuffer' });
     const contentType = res.headers['content-type'] || 'image/jpeg';
@@ -51,8 +51,8 @@ async function fetchUserPfp(username: string, base64?: boolean) {
       `https://api.jikan.moe/v4/users/${encodeURIComponent(username)}`
     );
     const url = res.data?.data?.images?.jpg?.image_url;
-    // Only convert to base64 if base64 is true
-    return base64 === true ? await fetchImageAsDataURI(url, true) : url;
+    // Only convert to base64 if base64 is true (default: true)
+    return base64 === false ? url : await fetchImageAsDataURI(url, true);
   } catch {
     return undefined;
   }
@@ -102,12 +102,12 @@ async function fetchPictures(
   if (title) {
     anilistImg = await fetchAniListImage(title, type === 'manga');
     if (anilistImg) {
-      // Only convert to base64 if base64 is true
-      if (base64 === true) {
+      // Only convert to base64 if base64 is true (default: true)
+      if (base64 === false) {
+        return { cover: anilistImg, small: anilistImg };
+      } else {
         const imgData = await fetchImageAsDataURI(anilistImg, true);
         return { cover: imgData, small: imgData };
-      } else {
-        return { cover: anilistImg, small: anilistImg };
       }
     }
   }
@@ -124,14 +124,14 @@ async function fetchPictures(
       d?.webp?.image_url ||
       d?.jpg?.small_image_url ||
       d?.jpg?.image_url;
-    if (base64 === true) {
+    if (base64 === false) {
+      return { cover: coverUrl, small: smallUrl };
+    } else {
       const [cover, small] = await Promise.all([
         fetchImageAsDataURI(coverUrl, true),
         fetchImageAsDataURI(smallUrl, true)
       ]);
       return { cover, small };
-    } else {
-      return { cover: coverUrl, small: smallUrl };
     }
   } catch {
     return {};
