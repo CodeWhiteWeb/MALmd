@@ -7,16 +7,16 @@
 
 <!-- Badges -->
 <p align="center">
-  <a href="https://github.com/CodeWhiteWeb/MAL-md/issues">
-    <img src="https://img.shields.io/github/issues/CodeWhiteWeb/MAL-md?style=flat-square">
+  <a href="https://github.com/SajagIN/MAL-md/issues">
+    <img src="https://img.shields.io/github/issues/SajagIN/MAL-md?style=flat-square">
   </a>
 
-  <a href="https://github.com/CodeWhiteWeb/MAL-md/pulls">
-    <img src="https://img.shields.io/github/issues-pr/CodeWhiteWeb/MAL-md?style=flat-square">
+  <a href="https://github.com/SajagIN/MAL-md/pulls">
+    <img src="https://img.shields.io/github/issues-pr/SajagIN/MAL-md?style=flat-square">
   </a>
   
-  <a href="https://twitter.com/CodeWhiteWeb1" target="_blank">
-    <img alt="Twitter: CodeWhiteWeb1" src="https://img.shields.io/twitter/follow/CodeWhiteWeb1.svg?style=social" />
+  <a href="https://twitter.com/SajagIN1" target="_blank">
+    <img alt="Twitter: SajagIN1" src="https://img.shields.io/twitter/follow/SajagIN1.svg?style=social" />
   </a>
 </p>
 
@@ -24,7 +24,7 @@
 <p align="center">
   <a href="https://mal-md.vercel.app/api" target="_blank">View Demo</a>
   <span> · </span>
-  <a href="https://github.com/CodeWhiteWeb/MAL-md/issues" target="_blank">Report Bug</a>
+  <a href="https://github.com/SajagIN/MAL-md/issues" target="_blank">Report Bug</a>
 </p>
 
 ## Features ✨
@@ -135,7 +135,7 @@ npx vercel dev
 
 Contributions, issues and feature requests are welcome!
 
-Feel free to check [issues page](https://github.com/CodeWhiteWeb/MAL-md/issues).
+Feel free to check [issues page](https://github.com/SajagIN/MAL-md/issues).
 
 ## Special Thanks ❤
 
@@ -148,10 +148,10 @@ Be sure to drop a 🌟 if you like the project!
 
 ## Author 🤗
 
-👤 **CodeWhiteWeb**
+👤 **SajagIN**
 
-- Website: https://CodeWhiteWeb.thedev.id
-- Twitter: [@CodeWhiteWeb1](https://twitter.com/CodeWhiteWeb1)
-- Github: [@CodeWhiteWeb](https://github.com/CodeWhiteWeb)
+- Website: https://SajagIN.thedev.id
+- Twitter: [@SajagIN1](https://twitter.com/SajagIN1)
+- Github: [@SajagIN](https://github.com/SajagIN)
 
-<div align="center">Made by CodeWhiteWeb with ❤ and TypeScript</div>
+<div align="center">Made by SajagIN with ❤ and TypeScript</div>
